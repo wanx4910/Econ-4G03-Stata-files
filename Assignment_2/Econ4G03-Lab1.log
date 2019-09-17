@@ -1,0 +1,143 @@
+--------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  D:\Econ 4G03\Assignment 2\Econ4G03-Lab1.log
+  log type:  text
+ opened on:   5 Oct 2016, 19:52:14
+
+. 
+. capture drop _all
+
+. 
+. set more on
+
+. 
+. pause on 
+
+. 
+. use "lfs2000feb"
+
+. 
+. replace sex = 0 if sex == 2
+(51679 real changes made)
+
+. 
+. rename sex male
+
+. 
+. g byte urb = ~(cma==4)
+
+. 
+. g age = .
+(100112 missing values generated)
+
+. replace age = 17   if age_12 == 1
+(8941 real changes made)
+
+. replace age = 22   if age_12 == 2
+(7612 real changes made)
+
+. replace age = 27   if age_12 == 3
+(7398 real changes made)
+
+. replace age = 32   if age_12 == 4
+(8532 real changes made)
+
+. replace age = 37   if age_12 == 5
+(10710 real changes made)
+
+. replace age = 42   if age_12 == 6
+(10816 real changes made)
+
+. replace age = 47   if age_12 == 7
+(9543 real changes made)
+
+. replace age = 52   if age_12 == 8
+(8699 real changes made)
+
+. replace age = 57   if age_12 == 9
+(6532 real changes made)
+
+. replace age = 62   if age_12 == 10
+(5245 real changes made)
+
+. replace age = 67   if age_12 == 11
+(4876 real changes made)
+
+. replace age = 73   if age_12 == 12
+(11208 real changes made)
+
+. 
+. g age2 = age * age
+
+. tab age
+
+        age |      Freq.     Percent        Cum.
+------------+-----------------------------------
+         17 |      8,941        8.93        8.93
+         22 |      7,612        7.60       16.53
+         27 |      7,398        7.39       23.92
+         32 |      8,532        8.52       32.45
+         37 |     10,710       10.70       43.14
+         42 |     10,816       10.80       53.95
+         47 |      9,543        9.53       63.48
+         52 |      8,699        8.69       72.17
+         57 |      6,532        6.52       78.69
+         62 |      5,245        5.24       83.93
+         67 |      4,876        4.87       88.80
+         73 |     11,208       11.20      100.00
+------------+-----------------------------------
+      Total |    100,112      100.00
+
+. tab age2
+
+       age2 |      Freq.     Percent        Cum.
+------------+-----------------------------------
+        289 |      8,941        8.93        8.93
+        484 |      7,612        7.60       16.53
+        729 |      7,398        7.39       23.92
+       1024 |      8,532        8.52       32.45
+       1369 |     10,710       10.70       43.14
+       1764 |     10,816       10.80       53.95
+       2209 |      9,543        9.53       63.48
+       2704 |      8,699        8.69       72.17
+       3249 |      6,532        6.52       78.69
+       3844 |      5,245        5.24       83.93
+       4489 |      4,876        4.87       88.80
+       5329 |     11,208       11.20      100.00
+------------+-----------------------------------
+      Total |    100,112      100.00
+
+. 
+. g byte nf = prov==10
+
+. g byte pe = prov==11
+
+. g byte ns = prov==12
+
+. g byte nb = prov==13
+
+. g byte qu = prov==24
+
+. g byte on = prov==35
+
+. g byte mn = prov==46
+
+. g byte sk = prov==47
+
+. g byte ab = prov==48
+
+. g byte bc = prov==59
+
+. pause
+pause:  
+-> . 
+-> . 
+-> . 
+-> . 
+-> . 
+-> . exit, clear
+--Break--  (Type BREAK to send real break back to calling program)
+-> . exit, clear
+--Break--  (Type BREAK to send real break back to calling program)
+-> . exit, clear
+--Break--  (Type BREAK to send real break back to calling program)

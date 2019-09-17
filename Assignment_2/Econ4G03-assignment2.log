@@ -1,0 +1,277 @@
+--------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  D:\Econ 4G03\Assignment 2\Econ4G03-assignment2.log
+  log type:  text
+ opened on:   5 Oct 2016, 20:34:15
+
+. 
+. capture drop _all
+
+. 
+. use "lfs2000feb"
+
+. 
+. replace sex = 0 if sex == 2
+(51679 real changes made)
+
+. *Makes the reference category female
+. *Changes female into standard statistical format for dummy variables
+. 
+. rename sex male
+
+. 
+. g byte urb = ~(cma==4)
+
+. 
+. g age = .
+(100112 missing values generated)
+
+. 
+. replace age = 17   if age_12 == 1
+(8941 real changes made)
+
+. replace age = 22   if age_12 == 2
+(7612 real changes made)
+
+. replace age = 27   if age_12 == 3
+(7398 real changes made)
+
+. replace age = 32   if age_12 == 4
+(8532 real changes made)
+
+. replace age = 37   if age_12 == 5
+(10710 real changes made)
+
+. replace age = 42   if age_12 == 6
+(10816 real changes made)
+
+. replace age = 47   if age_12 == 7
+(9543 real changes made)
+
+. replace age = 52   if age_12 == 8
+(8699 real changes made)
+
+. replace age = 57   if age_12 == 9
+(6532 real changes made)
+
+. replace age = 62   if age_12 == 10
+(5245 real changes made)
+
+. replace age = 67   if age_12 == 11
+(4876 real changes made)
+
+. replace age = 73   if age_12 == 12
+(11208 real changes made)
+
+. 
+. g byte nf = prov==10
+
+. g byte pe = prov==11
+
+. g byte ns = prov==12
+
+. g byte nb = prov==13
+
+. g byte qu = prov==24
+
+. g byte on = prov==35
+
+. g byte mn = prov==46
+
+. g byte sk = prov==47
+
+. g byte ab = prov==48
+
+. g byte bc = prov==59
+
+. 
+. g age2 = age*age
+
+. rename hrlyearn hrearn
+
+. g byte earnflag = 0
+
+. replace earnflag = 1 if hrearn ~= .
+(46846 real changes made)
+
+. replace earnflag = . if lfsstat >=3
+(42712 real changes made, 42712 to missing)
+
+. drop if earn~=1
+(53266 observations deleted)
+
+. g lnearn = ln(hrearn)
+
+. 
+. *Question 1
+. *Part a
+. g elementary = 0
+
+. replace elementary = 1 if educ90==0
+(1497 real changes made)
+
+. g somesecondary = 0
+
+. replace somesecondary = 1 if educ90==1
+(6618 real changes made)
+
+. g highschoolgrad = 0
+
+. replace highschoolgrad = 1 if educ90==2
+(10173 real changes made)
+
+. g somepostsecondary = 0
+
+. replace somepostsecondary = 1 if educ90==3
+(4527 real changes made)
+
+. g postsecondarycert = 0
+
+. replace postsecondarycert = 1 if educ90==4
+(16071 real changes made)
+
+. g bachelordegree = 0
+
+. replace bachelordegree = 1 if educ90==5
+(5427 real changes made)
+
+. g graduatedegree = 0
+
+. replace graduatedegree = 1 if educ90==6
+(2533 real changes made)
+
+. *Generating dummy variables for each education level in the EDUC90 dataset
+. 
+. *Part b
+. reg lnearn age age2 male elementary somesecondary somepostsecondary postsecond
+> arycert bachelordegree graduatedegree urb nf-ab
+
+      Source |       SS       df       MS              Number of obs =   46846
+-------------+------------------------------           F( 19, 46826) = 1829.93
+       Model |  4977.97985    19  261.998939           Prob > F      =  0.0000
+    Residual |  6704.26778 46826  .143174044           R-squared     =  0.4261
+-------------+------------------------------           Adj R-squared =  0.4259
+       Total |  11682.2476 46845  .249380887           Root MSE      =  .37838
+
+-------------------------------------------------------------------------------
+       lnearn |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------+----------------------------------------------------------------
+          age |   .0669582   .0008813    75.98   0.000     .0652308    .0686855
+         age2 |  -.0006848   .0000113   -60.70   0.000    -.0007069   -.0006626
+         male |   .2384962   .0035132    67.88   0.000     .2316102    .2453823
+   elementary |  -.1940382   .0106912   -18.15   0.000    -.2149932   -.1730832
+somesecondary |  -.1267001   .0060817   -20.83   0.000    -.1386203   -.1147798
+somepostsec~y |    .011622   .0068058     1.71   0.088    -.0017174    .0249614
+postseconda~t |   .1463899   .0048249    30.34   0.000     .1369331    .1558468
+bachelordeg~e |   .3847316   .0063909    60.20   0.000     .3722054    .3972578
+graduatedeg~e |    .482665   .0084537    57.10   0.000     .4660957    .4992343
+          urb |   .0013351   .0054077     0.25   0.805     -.009264    .0119342
+           nf |  -.3121184   .0118224   -26.40   0.000    -.3352905   -.2889463
+           pe |  -.2674092   .0125724   -21.27   0.000    -.2920513   -.2427671
+           ns |  -.2704952   .0093773   -28.85   0.000    -.2888748   -.2521155
+           nb |  -.2274643   .0095626   -23.79   0.000     -.246207   -.2087215
+           qu |  -.1143933   .0071745   -15.94   0.000    -.1284555   -.1003311
+           on |  -.0302312   .0066172    -4.57   0.000    -.0432009   -.0172614
+           mn |  -.1366886   .0088536   -15.44   0.000    -.1540418   -.1193354
+           sk |   -.149535   .0088956   -16.81   0.000    -.1669705   -.1320994
+           ab |  -.0782088   .0085399    -9.16   0.000    -.0949471   -.0614705
+        _cons |    5.67892   .0176903   321.02   0.000     5.644247    5.713593
+-------------------------------------------------------------------------------
+
+. *Frish-Waugh Theorem
+. *Step 1
+. reg male age age2 elementary somesecondary somepostsecondary postsecondarycert
+>  bachelordegree graduatedegree urb nf-ab
+
+      Source |       SS       df       MS              Number of obs =   46846
+-------------+------------------------------           F( 18, 46827) =   24.50
+       Model |  109.246521    18  6.06925118           Prob > F      =  0.0000
+    Residual |   11599.698 46827  .247713882           R-squared     =  0.0093
+-------------+------------------------------           Adj R-squared =  0.0089
+       Total |  11708.9445 46845  .249950784           Root MSE      =  .49771
+
+-------------------------------------------------------------------------------
+         male |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------+----------------------------------------------------------------
+          age |    .000624   .0011592     0.54   0.590     -.001648    .0028961
+         age2 |  -1.37e-06   .0000148    -0.09   0.926    -.0000305    .0000277
+   elementary |   .1317763   .0140496     9.38   0.000     .1042389    .1593137
+somesecondary |   .0686395   .0079933     8.59   0.000     .0529724    .0843065
+somepostsec~y |  -.0375929   .0089503    -4.20   0.000    -.0551357   -.0200501
+postseconda~t |  -.0169564    .006346    -2.67   0.008    -.0293946   -.0045182
+bachelordeg~e |   -.055639   .0084023    -6.62   0.000    -.0721077   -.0391702
+graduatedeg~e |   .0527263   .0111169     4.74   0.000      .030937    .0745156
+          urb |  -.0173316   .0071126    -2.44   0.015    -.0312723   -.0033908
+           nf |  -.0439044   .0155494    -2.82   0.005    -.0743814   -.0134274
+           pe |   -.071853   .0165339    -4.35   0.000    -.1042596   -.0394465
+           ns |  -.0390258   .0123332    -3.16   0.002     -.063199   -.0148527
+           nb |  -.0334655   .0125772    -2.66   0.008    -.0581171    -.008814
+           qu |   .0029994   .0094371     0.32   0.751    -.0154973    .0214962
+           on |   -.011549   .0087038    -1.33   0.185    -.0286085    .0055106
+           mn |  -.0248837   .0116451    -2.14   0.033    -.0477082   -.0020592
+           sk |  -.0402227   .0116994    -3.44   0.001    -.0631537   -.0172916
+           ab |  -.0030777    .011233    -0.27   0.784    -.0250945    .0189391
+        _cons |   .5031453   .0231526    21.73   0.000     .4577659    .5485246
+-------------------------------------------------------------------------------
+
+. *Frish-Waugh Theorem
+. predict double uhat, residuals
+
+. *Step 2
+. reg lnearn age age2 elementary somesecondary somepostsecondary postsecondaryce
+> rt bachelordegree graduatedegree urb nf-ab
+
+      Source |       SS       df       MS              Number of obs =   46846
+-------------+------------------------------           F( 18, 46827) = 1525.48
+       Model |  4318.18374    18  239.899096           Prob > F      =  0.0000
+    Residual |  7364.06389 46827  .157261065           R-squared     =  0.3696
+-------------+------------------------------           Adj R-squared =  0.3694
+       Total |  11682.2476 46845  .249380887           Root MSE      =  .39656
+
+-------------------------------------------------------------------------------
+       lnearn |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------+----------------------------------------------------------------
+          age |    .067107   .0009236    72.65   0.000     .0652967    .0689174
+         age2 |  -.0006851   .0000118   -57.95   0.000    -.0007083   -.0006619
+   elementary |    -.16261   .0111944   -14.53   0.000    -.1845512   -.1406689
+somesecondary |  -.1103298   .0063689   -17.32   0.000    -.1228129   -.0978467
+somepostsec~y |   .0026563   .0071314     0.37   0.710    -.0113214    .0166339
+postseconda~t |   .1423459   .0050563    28.15   0.000     .1324355    .1522563
+bachelordeg~e |   .3714619   .0066948    55.49   0.000     .3583401    .3845838
+graduatedeg~e |     .49524   .0088577    55.91   0.000     .4778789    .5126012
+          urb |  -.0027984   .0056671    -0.49   0.621     -.013906    .0083092
+           nf |  -.3225894   .0123893   -26.04   0.000    -.3468727   -.2983061
+           pe |  -.2845459   .0131738   -21.60   0.000    -.3103666   -.2587251
+           ns |  -.2798027   .0098268   -28.47   0.000    -.2990632   -.2605421
+           nb |  -.2354457   .0100212   -23.49   0.000    -.2550874    -.215804
+           qu |  -.1136779   .0075192   -15.12   0.000    -.1284157   -.0989402
+           on |  -.0329855    .006935    -4.76   0.000    -.0465782   -.0193929
+           mn |  -.1426232   .0092785   -15.37   0.000    -.1608092   -.1244372
+           sk |  -.1591279   .0093218   -17.07   0.000    -.1773988   -.1408571
+           ab |  -.0789428   .0089502    -8.82   0.000    -.0964853   -.0614004
+        _cons |   5.798918   .0184474   314.35   0.000     5.762761    5.835075
+-------------------------------------------------------------------------------
+
+. *Frish-Waugh Theorem
+. predict double uhat2, residuals
+
+. *Step 3 
+. reg uhat2 uhat
+
+      Source |       SS       df       MS              Number of obs =   46846
+-------------+------------------------------           F(  1, 46844) = 4610.12
+       Model |  659.796113     1  659.796113           Prob > F      =  0.0000
+    Residual |  6704.26778 46844  .143119029           R-squared     =  0.0896
+-------------+------------------------------           Adj R-squared =  0.0896
+       Total |  7364.06389 46845  .157200638           Root MSE      =  .37831
+
+------------------------------------------------------------------------------
+       uhat2 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        uhat |   .2384962   .0035126    67.90   0.000     .2316115    .2453809
+       _cons |   3.62e-17   .0017479     0.00   1.000    -.0034259    .0034259
+------------------------------------------------------------------------------
+
+. 
+end of do-file
+
