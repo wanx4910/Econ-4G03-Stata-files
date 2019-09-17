@@ -1,0 +1,118 @@
+----------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Volumes/NO NAME/Econ 4G03/Assignment 4/Econ4G03-Assign4-q2.log
+  log type:  text
+ opened on:  17 Nov 2016, 15:05:51
+
+. capture drop _all 
+
+. use "fertility"
+
+. * Part a
+. g weeksworked = weeksm1
+
+. reg weeksworked morekids
+
+      Source |       SS           df       MS      Number of obs   =   254,654
+-------------+----------------------------------   F(1, 254652)    =   3696.02
+       Model |  1742078.14         1  1742078.14   Prob > F        =    0.0000
+    Residual |   120027337   254,652  471.338679   R-squared       =    0.0143
+-------------+----------------------------------   Adj R-squared   =    0.0143
+       Total |   121769415   254,653  478.177816   Root MSE        =     21.71
+
+------------------------------------------------------------------------------
+ weeksworked |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    morekids |  -5.386996   .0886093   -60.79   0.000    -5.560667   -5.213324
+       _cons |   21.06843   .0546629   385.42   0.000     20.96129    21.17557
+------------------------------------------------------------------------------
+
+. * On average women with more than 2 children work less than women with 2 
+. * children, they work 5.39 weeks less in a year.
+. * Part b
+. * OLS regression done in a would be inappropriate to estimate the causal effect
+. * of fertility and it is because we don't have ordinal information of the causal
+. * effect of fertility on labour supply
+. * Part c
+. reg morekids samesex
+
+      Source |       SS           df       MS      Number of obs   =   254,654
+-------------+----------------------------------   F(1, 254652)    =   1237.22
+       Model |  290.247937         1  290.247937   Prob > F        =    0.0000
+    Residual |  59740.5888   254,652  .234596975   R-squared       =    0.0048
+-------------+----------------------------------   Adj R-squared   =    0.0048
+       Total |  60030.8368   254,653  .235735832   Root MSE        =    .48435
+
+------------------------------------------------------------------------------
+    morekids |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+     samesex |   .0675253   .0019197    35.17   0.000     .0637626    .0712879
+       _cons |   .3464248    .001365   253.79   0.000     .3437494    .3491002
+------------------------------------------------------------------------------
+
+. * Couples whose first 2 children are of the same sex are more likely to have a 
+. * third child. As you are 6.75% more likely to have a third child if your first
+. * two children are the same sex. the effect is somewhat large as it is 
+. * statistically significant and different from zero.
+. * Part d
+. * Samesex is a valid instrument for an IV regression of weeksworked on morekids
+. * because the sex of your children should be random and it should not affect 
+. * your labour supply differently whether they are the same sex or not.
+. * Therefore it grabs the variation in X as shown in part c but should not 
+. * directly correlated with labour supply. 
+. * Part e
+. * samesex is not a weak instrument because the F-stat is >> 10, this shows that
+. * it is well correlated with whether you have more than 2 kids.
+. * Part f
+. ivregress 2sls weeksworked (morekids = samesex) 
+
+Instrumental variables (2SLS) regression          Number of obs   =    254,654
+                                                  Wald chi2(1)    =      24.54
+                                                  Prob > chi2     =     0.0000
+                                                  R-squared       =     0.0139
+                                                  Root MSE        =     21.715
+
+------------------------------------------------------------------------------
+ weeksworked |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    morekids |  -6.313685   1.274599    -4.95   0.000    -8.811853   -3.815517
+       _cons |   21.42109   .4869706    43.99   0.000     20.46665    22.37554
+------------------------------------------------------------------------------
+Instrumented:  morekids
+Instruments:   samesex
+
+. * The effect of fertility on labour supply is they work less with more children.
+. * Women with more than 2 children work 6.31 weeks less a year than women who 
+. * have less than 2 children. Using samesex as a instrument, it shows that the 
+. * true effect of fertility on labour supply is slightly larger than the OLS 
+. * results would suggest.
+. * Part g
+. ivregress 2sls weeksworked agem1 black hispan othrace (morekids = samesex)
+
+Instrumental variables (2SLS) regression          Number of obs   =    254,654
+                                                  Wald chi2(5)    =    6677.36
+                                                  Prob > chi2     =     0.0000
+                                                  R-squared       =     0.0437
+                                                  Root MSE        =     21.384
+
+------------------------------------------------------------------------------
+ weeksworked |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    morekids |  -5.821051   1.246295    -4.67   0.000    -8.263744   -3.378358
+       agem1 |   .8315975   .0228862    36.34   0.000     .7867414    .8764536
+       black |   11.62327   .2289286    50.77   0.000     11.17458    12.07197
+      hispan |   .4041802   .2598548     1.56   0.120    -.1051259    .9134863
+     othrace |   2.130962   .2058553    10.35   0.000     1.727493    2.534431
+       _cons |  -4.791894   .4065695   -11.79   0.000    -5.588755   -3.995032
+------------------------------------------------------------------------------
+Instrumented:  morekids
+Instruments:   agem1 black hispan othrace samesex
+
+. * The results change numerically, because the additional regressors serve as 
+. * control variables so they grab the some of the variance of Y however, the
+. * causal effect of fertility on labour supply remains robust as the results do
+. * not change directions or vary significantly in magnitude. Therefore the 
+. * results in part g are more precise compared to part f.
+. 
+end of do-file
+

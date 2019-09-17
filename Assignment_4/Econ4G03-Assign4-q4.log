@@ -1,0 +1,104 @@
+----------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Volumes/NO NAME/Econ 4G03/Assignment 4/Econ4G03-Assign4-q4.log
+  log type:  text
+ opened on:  17 Nov 2016, 18:06:30
+
+. capture drop _all 
+
+. set obs 21580
+number of observations (_N) was 0, now 21,580
+
+. g byte on = 0
+
+. replace on = 1 in 1/9465
+(9,465 real changes made)
+
+. g immig = 1 in 1/5040
+(16,540 missing values generated)
+
+. replace immig = 1 in 9466/13920
+(4,455 real changes made)
+
+. replace immig = 0 if immig == .
+(12,085 real changes made)
+
+. tab immig
+
+      immig |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |     12,085       56.00       56.00
+          1 |      9,495       44.00      100.00
+------------+-----------------------------------
+      Total |     21,580      100.00
+
+. tab on
+
+         on |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |     12,115       56.14       56.14
+          1 |      9,465       43.86      100.00
+------------+-----------------------------------
+      Total |     21,580      100.00
+
+. g byte matched = 0
+
+. replace matched = 1 in 1/1330
+(1,330 real changes made)
+
+. replace matched = 1 in 5041/7020
+(1,980 real changes made)
+
+. replace matched = 1 in 9466/10625
+(1,160 real changes made)
+
+. replace matched = 1 in 13921/18920
+(5,000 real changes made)
+
+. replace matched = 0 if matched == .
+(0 real changes made)
+
+. tab matched 
+
+    matched |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |     12,110       56.12       56.12
+          1 |      9,470       43.88      100.00
+------------+-----------------------------------
+      Total |     21,580      100.00
+
+. g onimmig = on * immig 
+
+. reg matched on immig onimmig
+
+      Source |       SS           df       MS      Number of obs   =    21,580
+-------------+----------------------------------   F(3, 21576)     =    996.90
+       Model |  646.947117         3  215.649039   Prob > F        =    0.0000
+    Residual |  4667.31146    21,576  .216319589   R-squared       =    0.1217
+-------------+----------------------------------   Adj R-squared   =    0.1216
+       Total |  5314.25857    21,579  .246269919   Root MSE        =     .4651
+
+------------------------------------------------------------------------------
+     matched |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+          on |  -.2052839   .0087821   -23.38   0.000    -.2224975   -.1880702
+       immig |  -.3923599   .0087634   -44.77   0.000    -.4095368   -.3751831
+     onimmig |   .2087912   .0129847    16.08   0.000     .1833402    .2342422
+       _cons |   .6527415   .0053141   122.83   0.000     .6423254    .6631576
+------------------------------------------------------------------------------
+
+. * The coefficient on the onimmig coefficient is positive which shows that
+. * immigrants in ontario are being matched more frequently compared to immigrants
+. * who are not residing in Ontario. The t stat on the onimmig is 16.08 which is 
+. * greater than 1.96 therefore the difference is statistically significant.
+. * Part e
+. * There are advantages to using Stata to do more in-depth analysis of this data
+. * as using stata allows for accurate computation of statistical parameters of 
+. * interest. However, the ability of stata to compute the correct results is 
+. * highly dependent on the ability of the researcher to write the program in a 
+. * way that is valid statistically as computers are machines that cannot 
+. * interpret the difference between what the programmer meant vs what the
+. * programmer actually wrote in code.
+. 
+end of do-file
+
