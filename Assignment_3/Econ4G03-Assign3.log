@@ -1,0 +1,199 @@
+----------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Volumes/NO NAME/Econ 4G03/Assignment 3/Econ4G03-Assign3.log
+  log type:  text
+ opened on:  31 Oct 2016, 13:29:45
+
+. capture drop _all 
+
+. *capture drop _all is required for regression to work
+. use "SeatBelts"
+
+. 
+. g lnIncome = ln(income)
+
+. * Question 2a
+. reg fatalityrate sb_useage speed65 speed70 ba08 drinkage21 lnIncome age
+
+      Source |       SS           df       MS      Number of obs   =       556
+-------------+----------------------------------   F(7, 548)       =     95.41
+       Model |  .007711649         7  .001101664   Prob > F        =    0.0000
+    Residual |  .006327757       548  .000011547   R-squared       =    0.5493
+-------------+----------------------------------   Adj R-squared   =    0.5435
+       Total |  .014039406       555  .000025296   Root MSE        =     .0034
+
+------------------------------------------------------------------------------
+fatalityrate |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+   sb_useage |   .0040684   .0012158     3.35   0.001     .0016803    .0064565
+     speed65 |   .0001479   .0004029     0.37   0.714    -.0006436    .0009394
+     speed70 |   .0024045   .0005112     4.70   0.000     .0014003    .0034086
+        ba08 |  -.0019246   .0004447    -4.33   0.000    -.0027982    -.001051
+  drinkage21 |   .0000799   .0008756     0.09   0.927    -.0016401    .0017998
+    lnIncome |  -.0181444   .0009311   -19.49   0.000    -.0199733   -.0163155
+         age |  -7.22e-06   .0001089    -0.07   0.947    -.0002212    .0002067
+       _cons |   .1965469   .0082232    23.90   0.000     .1803941    .2126998
+------------------------------------------------------------------------------
+
+. * The positive magnitude of the sb_useage coefficient shows that seatbelt usage
+. * increases fatality rate.
+. * 2b
+. xtset fips year
+       panel variable:  fips (strongly balanced)
+        time variable:  year, 1983 to 1997
+                delta:  1 unit
+
+. * Declares our dataset as a panel data
+. xtreg fatalityrate sb_useage speed65 speed70 ba08 drinkage21 lnIncome age, fe
+
+Fixed-effects (within) regression               Number of obs     =        556
+Group variable: fips                            Number of groups  =         51
+
+R-sq:                                           Obs per group:
+     within  = 0.6868                                         min =          8
+     between = 0.1957                                         avg =       10.9
+     overall = 0.3896                                         max =         15
+
+                                                F(7,498)          =     156.00
+corr(u_i, Xb)  = -0.1332                        Prob > F          =     0.0000
+
+------------------------------------------------------------------------------
+fatalityrate |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+   sb_useage |  -.0057748   .0011557    -5.00   0.000    -.0080455    -.003504
+     speed65 |   -.000425   .0003339    -1.27   0.204     -.001081    .0002309
+     speed70 |   .0012333   .0003293     3.74   0.000     .0005862    .0018804
+        ba08 |  -.0013775   .0003727    -3.70   0.000    -.0021097   -.0006452
+  drinkage21 |   .0007453   .0005074     1.47   0.142    -.0002516    .0017422
+    lnIncome |  -.0135144   .0014192    -9.52   0.000    -.0163027   -.0107261
+         age |   .0009787    .000382     2.56   0.011     .0002281    .0017292
+       _cons |   .1209958   .0097669    12.39   0.000     .1018063    .1401853
+-------------+----------------------------------------------------------------
+     sigma_u |  .00383103
+     sigma_e |   .0017871
+         rho |  .82128567   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0: F(50, 498) = 29.67                    Prob > F = 0.0000
+
+. * Does the fixed effect regression model
+. * Yes, the result changes when we add state fixed effects into our model. 
+. * Seatbelt usage now decreases fatality rates. A possible explanation for this 
+. * change in the results could be due to the fact that if you drive in a state
+. * with higher accident or fatality rates, you would be more likely to take 
+. * safety precautions like wearing seatbelts in the first place. Therefore not 
+. * accounting for omitted variables or fixed state characteristics would skew the
+. * results.
+. * 2c
+. xtreg fatalityrate sb_useage speed65 speed70 ba08 drinkage21 lnIncome age i.year
+> , fe
+
+Fixed-effects (within) regression               Number of obs     =        556
+Group variable: fips                            Number of groups  =         51
+
+R-sq:                                           Obs per group:
+     within  = 0.7506                                         min =          8
+     between = 0.1139                                         avg =       10.9
+     overall = 0.0338                                         max =         15
+
+                                                F(21,484)         =      69.37
+corr(u_i, Xb)  = -0.5086                        Prob > F          =     0.0000
+
+------------------------------------------------------------------------------
+fatalityrate |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+   sb_useage |  -.0037186   .0011328    -3.28   0.001    -.0059445   -.0014926
+     speed65 |  -.0007833   .0004241    -1.85   0.065    -.0016166      .00005
+     speed70 |   .0008042   .0003402     2.36   0.018     .0001358    .0014725
+        ba08 |  -.0008225   .0003516    -2.34   0.020    -.0015134   -.0001316
+  drinkage21 |  -.0011337   .0005353    -2.12   0.035    -.0021855   -.0000819
+    lnIncome |   .0062643   .0038683     1.62   0.106    -.0013363     .013865
+         age |    .001318   .0003834     3.44   0.001     .0005648    .0020713
+             |
+        year |
+       1984  |  -.0004319   .0011763    -0.37   0.714    -.0027432    .0018794
+       1985  |  -.0010707   .0011803    -0.91   0.365    -.0033897    .0012484
+       1986  |  -.0005777   .0013086    -0.44   0.659     -.003149    .0019935
+       1987  |  -.0008722   .0015532    -0.56   0.575    -.0039241    .0021797
+       1988  |   -.001885    .001751    -1.08   0.282    -.0053256    .0015556
+       1989  |  -.0041766   .0019484    -2.14   0.033    -.0080049   -.0003482
+       1990  |   -.005266   .0021205    -2.48   0.013    -.0094325   -.0010994
+       1991  |  -.0066622   .0022348    -2.98   0.003    -.0110534   -.0022711
+       1992  |   -.008518   .0024085    -3.54   0.000    -.0132505   -.0037855
+       1993  |  -.0089399   .0025409    -3.52   0.000    -.0139324   -.0039475
+       1994  |  -.0096297   .0026961    -3.57   0.000    -.0149273   -.0043321
+       1995  |  -.0101123   .0028675    -3.53   0.000    -.0157465   -.0044781
+       1996  |  -.0110766   .0030447    -3.64   0.000     -.017059   -.0050942
+       1997  |  -.0116075   .0032097    -3.62   0.000    -.0179141   -.0053009
+             |
+       _cons |  -.0779904   .0382942    -2.04   0.042    -.1532338    -.002747
+-------------+----------------------------------------------------------------
+     sigma_u |  .00575371
+     sigma_e |  .00161752
+         rho |  .92675648   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0: F(50, 484) = 36.69                    Prob > F = 0.0000
+
+. * Does a multiple fixed effect regression model
+. * Yes the results changes compared to part a and b. As we add a time dimension 
+. * fixed effect, it is logical that the coefficients change.
+. * 2d
+. testparm i.year
+
+ ( 1)  1984.year = 0
+ ( 2)  1985.year = 0
+ ( 3)  1986.year = 0
+ ( 4)  1987.year = 0
+ ( 5)  1988.year = 0
+ ( 6)  1989.year = 0
+ ( 7)  1990.year = 0
+ ( 8)  1991.year = 0
+ ( 9)  1992.year = 0
+ (10)  1993.year = 0
+ (11)  1994.year = 0
+ (12)  1995.year = 0
+ (13)  1996.year = 0
+ (14)  1997.year = 0
+
+       F( 14,   484) =    8.85
+            Prob > F =    0.0000
+
+. * The model in c with includes both entity and time fixed effect is the most 
+. * reliable because we are controlling for unobserved fixed state characteristics
+. * and for unobserved fixed time effects. The Prob > F = 0, therefore we reject
+. * the null hypothesis of the joint test of year dummies and we need time fixed
+. * effect.
+. * 2e
+. 
+. 
+. * 3a
+. * The effect on probablity if PI ratio changed from 0.2 to 0.45 for a black 
+. * person is Pr(–2.26 + 2.74P/I ratio + 0.71black)= 
+. display normal(-0.317)
+.3756218
+
+. display normal(-1.002)
+.1581718
+
+. * 0.3756 - 0.1582 = 0.2174 Therefore increasing the PI ratio from 0.2 to 0.45 
+. * increase the probability of getting a loan denied by 21.74%
+. * 3b
+. * The effect on probablity if PI ratio changed from 0.2 to 0.45 for a non black 
+. * person is Pr(–2.26 + 2.74P/I ratio + 0.71black)= 
+. display normal(-1.027)
+.15221023
+
+. display normal(-1.712)
+.04344833
+
+. * 0.1522 - 0.0434 = 0.1088 Therefore increasing the PI ratio from 0.2 to 0.45
+. * increase the probability of getting a loan denied by 10.88%
+. 
+. 
+end of do-file
+
+. sum vmt
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         vmt |        765    41447.73    43961.99       3099     285612
+

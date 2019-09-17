@@ -1,0 +1,114 @@
+----------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Volumes/NO NAME/Econ 4G03/Assignment 3/Econ4G03-Assign3pt2.log
+  log type:  text
+ opened on:  31 Oct 2016, 13:47:35
+
+. capture drop _all 
+
+. use "Smoking"
+
+. g age2 = age * age
+
+. * 4a
+. probit smoker smkban female age age2 hsdrop hsgrad colsome colgrad black hispani
+> c
+
+Iteration 0:   log likelihood = -5537.1662  
+Iteration 1:   log likelihood = -5238.7464  
+Iteration 2:   log likelihood =  -5235.868  
+Iteration 3:   log likelihood = -5235.8679  
+
+Probit regression                               Number of obs     =     10,000
+                                                LR chi2(10)       =     602.60
+                                                Prob > chi2       =     0.0000
+Log likelihood = -5235.8679                     Pseudo R2         =     0.0544
+
+------------------------------------------------------------------------------
+      smoker |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      smkban |    -.15863   .0289964    -5.47   0.000    -.2154619   -.1017981
+      female |  -.1117313   .0288205    -3.88   0.000    -.1682183   -.0552442
+         age |   .0345114   .0069362     4.98   0.000     .0209167     .048106
+        age2 |  -.0004675   .0000828    -5.65   0.000    -.0006299   -.0003052
+      hsdrop |    1.14161   .0720428    15.85   0.000     1.000409    1.282812
+      hsgrad |   .8826708    .059778    14.77   0.000     .7655081    .9998336
+     colsome |   .6771192   .0609347    11.11   0.000     .5576893    .7965491
+     colgrad |   .2346839   .0650598     3.61   0.000      .107169    .3621988
+       black |  -.0842789   .0526498    -1.60   0.109    -.1874705    .0189127
+    hispanic |  -.3382743   .0477535    -7.08   0.000    -.4318694   -.2446792
+       _cons |  -1.734926    .152582   -11.37   0.000    -2.033982   -1.435871
+------------------------------------------------------------------------------
+
+. * 4b
+. ttest smkban = 0, level (95)
+
+One-sample t test
+------------------------------------------------------------------------------
+Variable |     Obs        Mean    Std. Err.   Std. Dev.   [95% Conf. Interval]
+---------+--------------------------------------------------------------------
+  smkban |  10,000       .6098    .0048782    .4878194    .6002378    .6193622
+------------------------------------------------------------------------------
+    mean = mean(smkban)                                           t = 125.0053
+Ho: mean = 0                                     degrees of freedom =     9999
+
+    Ha: mean < 0                 Ha: mean != 0                 Ha: mean > 0
+ Pr(T < t) = 1.0000         Pr(|T| > |t|) = 0.0000          Pr(T > t) = 0.0000
+
+. * Since the t-statistic is 125.0053, and the p value is 0 therefore we reject
+. * the null hypothesis and the coefficient of smkban is not equal to zero.
+. * 4c
+. test hsdrop=hsgrad=colsome=colgrad=0
+
+ ( 1)  [smoker]hsdrop - [smoker]hsgrad = 0
+ ( 2)  [smoker]hsdrop - [smoker]colsome = 0
+ ( 3)  [smoker]hsdrop - [smoker]colgrad = 0
+ ( 4)  [smoker]hsdrop = 0
+
+           chi2(  4) =  464.90
+         Prob > chi2 =    0.0000
+
+. * As the p value of the f test is zero, we reject the null hypothesis that 
+. * probability of smoking does not depend on the level of education.
+. * 4d
+. generate mra = _b[smkban]*0 + _b[female]*0 + _b[age]*20 + _b[age2]*400 + _b[hsdr
+> op]*1 + _b[hsgrad]*0 + _b[colsome]*0 + _b[colgrad]*0  + _b[black]*0 + _b[hispani
+> c]*0 + _b[_cons]
+
+. display mra
+-.09010459
+
+. display normal(mra)
+.46410205
+
+. generate mra1 = _b[smkban]*1 + _b[female]*0 + _b[age]*20 + _b[age2]*400 + _b[hsd
+> rop]*1 + _b[hsgrad]*0 + _b[colsome]*0 + _b[colgrad]*0  + _b[black]*0 + _b[hispan
+> ic]*0 + _b[_cons]
+
+. display normal(mra1)
+.40178304
+
+. * Probability of that Mr.A smokes is 46.41% and effect of smoking ban on 
+. * probaility of smoking is a decrease of 6.23%
+. generate msb = _b[smkban]*0 + _b[female]*1 + _b[age]*40 + _b[age2]*1600 + _b[hsd
+> rop]*0 + _b[hsgrad]*0 + _b[colsome]*0 + _b[colgrad]*1  + _b[black]*1 + _b[hispan
+> ic]*0 + _b[_cons]
+
+. display msb
+-1.0638616
+
+. display normal(msb)
+.1436957
+
+. generate msb1 = _b[smkban]*1 + _b[female]*1 + _b[age]*40 + _b[age2]*1600 + _b[hs
+> drop]*0 + _b[hsgrad]*0 + _b[colsome]*0 + _b[colgrad]*1  + _b[black]*1 + _b[hispa
+> nic]*0 + _b[_cons]
+
+. display normal(msb1)
+.11076089
+
+. * Probability of that Ms.B smokes is 14.37% and effect of smoking ban on 
+. * probaility of smoking is a decrease of 3.29%
+. 
+end of do-file
+
