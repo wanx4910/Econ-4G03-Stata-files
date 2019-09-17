@@ -1,0 +1,373 @@
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  D:\Econ 4G03\Assignment 1\Econ4G03-Lab1.log
+  log type:  text
+ opened on:  30 Sep 2016, 16:03:47
+
+. 
+. capture drop _all
+
+. 
+. use "lfs2000feb"
+
+. 
+. *Question 6
+. 
+. replace sex = 0 if sex == 2
+(51679 real changes made)
+
+. *Makes the reference category female
+. *Changes female into standard statistical format for dummy variables
+. 
+. rename sex male
+
+. *rename the sex variable as male
+. 
+. ci male
+
+    Variable |        Obs        Mean    Std. Err.       [95% Conf. Interval]
+-------------+---------------------------------------------------------------
+        male |     100112    .4837882    .0015794        .4806925    .4868838
+
+. *Computes the 95% confidence interval of the dummy variable male
+. *Lower Bound: 0.4806925
+. *Upper Bound: 0.4868838
+. 
+. sum male
+
+    Variable |       Obs        Mean    Std. Dev.       Min        Max
+-------------+--------------------------------------------------------
+        male |    100112    .4837882    .4997396          0          1
+
+. *Provides a statistical summary of the variable
+. *The mean of the variable male is 0.4837882
+. *The standard error of the variable male is 0.0015794
+. *The standard deviation of the variable male is 0.04997396
+. *The standard deviation is a number that tell us the spread of the data assuming
+. *a normal distribution. Low Standard deviation number compared to the mean tells 
+. *us the data is relatively tight grouped which gives us a better idea of where 
+. *the true mean lies.
+. *The standard error of the mean is the standard deviation of the error in the
+. *sample mean compared to the true mean.
+. *They can be converted from one another using the formula SE = s/(n^0.5). 
+. 
+. reg male
+
+      Source |       SS       df       MS              Number of obs =  100112
+-------------+------------------------------           F(  0,100111) =    0.00
+       Model |           0     0           .           Prob > F      =       .
+    Residual |  25001.6882100111  .249739671           R-squared     =  0.0000
+-------------+------------------------------           Adj R-squared =  0.0000
+       Total |  25001.6882100111  .249739671           Root MSE      =  .49974
+
+------------------------------------------------------------------------------
+        male |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       _cons |   .4837882   .0015794   306.31   0.000     .4806925    .4868838
+------------------------------------------------------------------------------
+
+. *The output is related to part a and b because since we are regressing a dummy
+. *variable, the result would be a flat line with the intercept at the mean of 
+. *the variable. And there are more females than males in this set of data the
+. *mean is less than 0.5. The standard error of the intercept would become the
+. *standard error of the mean of the sample. Also the confidence interval of the 
+. *intercept would be the confidence interval of the mean of the sample.
+. 
+. *Question 7
+. 
+. g byte urb = ~(cma==4)
+
+. 
+. g age = .
+(100112 missing values generated)
+
+. 
+. replace age = 17   if age_12 == 1
+(8941 real changes made)
+
+. replace age = 22   if age_12 == 2
+(7612 real changes made)
+
+. replace age = 27   if age_12 == 3
+(7398 real changes made)
+
+. replace age = 32   if age_12 == 4
+(8532 real changes made)
+
+. replace age = 37   if age_12 == 5
+(10710 real changes made)
+
+. replace age = 42   if age_12 == 6
+(10816 real changes made)
+
+. replace age = 47   if age_12 == 7
+(9543 real changes made)
+
+. replace age = 52   if age_12 == 8
+(8699 real changes made)
+
+. replace age = 57   if age_12 == 9
+(6532 real changes made)
+
+. replace age = 62   if age_12 == 10
+(5245 real changes made)
+
+. replace age = 67   if age_12 == 11
+(4876 real changes made)
+
+. replace age = 73   if age_12 == 12
+(11208 real changes made)
+
+. 
+. g byte nf = prov==10
+
+. g byte pe = prov==11
+
+. g byte ns = prov==12
+
+. g byte nb = prov==13
+
+. g byte qu = prov==24
+
+. g byte on = prov==35
+
+. g byte mn = prov==46
+
+. g byte sk = prov==47
+
+. g byte ab = prov==48
+
+. g byte bc = prov==59
+
+. 
+. *a)
+. rename hrlyearn hrearn
+
+. reg hrearn age male urb nf-ab
+
+      Source |       SS       df       MS              Number of obs =   46846
+-------------+------------------------------           F( 12, 46833) =  932.75
+       Model |  6.0255e+09    12   502129076           Prob > F      =  0.0000
+    Residual |  2.5212e+10 46833  538329.513           R-squared     =  0.1929
+-------------+------------------------------           Adj R-squared =  0.1927
+       Total |  3.1237e+10 46845  666818.977           Root MSE      =  733.71
+
+------------------------------------------------------------------------------
+      hrearn |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         age |   23.03246    .284212    81.04   0.000      22.4754    23.58952
+        male |   356.6391   6.785792    52.56   0.000     343.3389    369.9394
+         urb |   76.61244   10.44359     7.34   0.000     56.14285    97.08202
+          nf |  -359.8766    22.8888   -15.72   0.000     -404.739   -315.0142
+          pe |  -369.1458   24.35493   -15.16   0.000    -416.8818   -321.4097
+          ns |  -363.1225   18.15012   -20.01   0.000     -398.697    -327.548
+          nb |  -309.3916     18.522   -16.70   0.000     -345.695   -273.0883
+          qu |  -168.4146   13.85227   -12.16   0.000    -195.5653    -141.264
+          on |  -11.16855   12.82022    -0.87   0.384    -36.29636    13.95926
+          mn |  -202.2365   17.15459   -11.79   0.000    -235.8598   -168.6133
+          sk |  -223.9894   17.24179   -12.99   0.000    -257.7835   -190.1952
+          ab |  -78.82957   16.55331    -4.76   0.000    -111.2743   -46.38485
+       _cons |   661.6468   16.51629    40.06   0.000     629.2747     694.019
+------------------------------------------------------------------------------
+
+. 
+. *b)
+. g lnearn = ln(hrearn)
+(53266 missing values generated)
+
+. reg lnearn age male urb nf-ab
+
+      Source |       SS       df       MS              Number of obs =   46846
+-------------+------------------------------           F( 12, 46833) = 1114.70
+       Model |  2595.37476    12   216.28123           Prob > F      =  0.0000
+    Residual |  9086.87287 46833  .194027136           R-squared     =  0.2222
+-------------+------------------------------           Adj R-squared =  0.2220
+       Total |  11682.2476 46845  .249380887           Root MSE      =  .44049
+
+------------------------------------------------------------------------------
+      lnearn |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         age |   .0155098   .0001706    90.90   0.000     .0151753    .0158442
+        male |   .2180818   .0040739    53.53   0.000     .2100969    .2260666
+         urb |   .0380846   .0062698     6.07   0.000     .0257956    .0503736
+          nf |  -.2804611   .0137414   -20.41   0.000    -.3073944   -.2535278
+          pe |  -.2592481   .0146216   -17.73   0.000    -.2879066   -.2305897
+          ns |  -.2562343   .0108965   -23.52   0.000    -.2775916    -.234877
+          nb |  -.2210174   .0111197   -19.88   0.000    -.2428123   -.1992225
+          qu |  -.1106684   .0083163   -13.31   0.000    -.1269684   -.0943684
+          on |  -.0254549   .0076967    -3.31   0.001    -.0405404   -.0103693
+          mn |  -.1402985   .0102988   -13.62   0.000    -.1604843   -.1201126
+          sk |  -.1616578   .0103512   -15.62   0.000    -.1819462   -.1413693
+          ab |  -.0788733   .0099378    -7.94   0.000    -.0983516    -.059395
+       _cons |   6.647203   .0099156   670.38   0.000     6.627768    6.666638
+------------------------------------------------------------------------------
+
+. 
+. *c)
+. reg lnearn age male urb pe-bc
+
+      Source |       SS       df       MS              Number of obs =   46846
+-------------+------------------------------           F( 12, 46833) = 1114.70
+       Model |  2595.37476    12   216.28123           Prob > F      =  0.0000
+    Residual |  9086.87287 46833  .194027136           R-squared     =  0.2222
+-------------+------------------------------           Adj R-squared =  0.2220
+       Total |  11682.2476 46845  .249380887           Root MSE      =  .44049
+
+------------------------------------------------------------------------------
+      lnearn |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         age |   .0155098   .0001706    90.90   0.000     .0151753    .0158442
+        male |   .2180818   .0040739    53.53   0.000     .2100969    .2260666
+         urb |   .0380846   .0062698     6.07   0.000     .0257956    .0503736
+          pe |    .021213   .0173432     1.22   0.221    -.0127799    .0552058
+          ns |   .0242268   .0143439     1.69   0.091    -.0038875    .0523412
+          nb |   .0594437   .0145148     4.10   0.000     .0309945     .087893
+          qu |   .1697927   .0127809    13.28   0.000      .144742    .1948435
+          on |   .2550063   .0123475    20.65   0.000      .230805    .2792075
+          mn |   .1401627   .0138962    10.09   0.000      .112926    .1673993
+          sk |   .1188034   .0139347     8.53   0.000     .0914912    .1461155
+          ab |   .2015878    .013633    14.79   0.000     .1748669    .2283087
+          bc |   .2804611   .0137414    20.41   0.000     .2535278    .3073944
+       _cons |   6.366742   .0136317   467.05   0.000     6.340024     6.39346
+------------------------------------------------------------------------------
+
+. 
+. *d)
+. g lnAge = ln(age)
+
+. reg lnearn lnAge urb nf-ab
+
+      Source |       SS       df       MS              Number of obs =   46846
+-------------+------------------------------           F( 11, 46834) = 1155.48
+       Model |  2493.67916    11  226.698105           Prob > F      =  0.0000
+    Residual |  9188.56847 46834  .196194399           R-squared     =  0.2135
+-------------+------------------------------           Adj R-squared =  0.2133
+       Total |  11682.2476 46845  .249380887           Root MSE      =  .44294
+
+------------------------------------------------------------------------------
+      lnearn |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       lnAge |   .6160295   .0059654   103.27   0.000     .6043371    .6277218
+         urb |   .0321714   .0063042     5.10   0.000     .0198151    .0445278
+          nf |  -.2945083   .0138173   -21.31   0.000    -.3215904   -.2674262
+          pe |  -.2705285   .0147006   -18.40   0.000    -.2993418   -.2417151
+          ns |  -.2654364   .0109562   -24.23   0.000    -.2869107   -.2439621
+          nb |  -.2281634   .0111808   -20.41   0.000    -.2500779   -.2062489
+          qu |   -.110311   .0083624   -13.19   0.000    -.1267015   -.0939206
+          on |   -.026682   .0077394    -3.45   0.001    -.0418514   -.0115127
+          mn |  -.1430634   .0103559   -13.81   0.000     -.163361   -.1227657
+          sk |  -.1653771   .0104081   -15.89   0.000    -.1857771   -.1449771
+          ab |  -.0755811   .0099929    -7.56   0.000    -.0951674   -.0559948
+       _cons |   5.143309   .0226318   227.26   0.000      5.09895    5.187668
+------------------------------------------------------------------------------
+
+. *R^2 is the percentage of the variance in the data explained by the regression
+. *model and measures the fit of the model to the data.
+. *The R^2 of the regression models in b and c are both 0.2222
+. *They do not differ because the only change made to the model was instead of 
+. *using British Columbia as the reference category like b, c used Newfoundland
+. *as the reference category.
+. *The interpretation of the coefficient age and male in a and b is that being
+. *older and a male has positive impact on a person's hourly earnings.
+. *The interpretation of lnAge in d is that being older is correlated with 
+. *earning more.
+. 
+. *Question 8
+. 
+. g age2 = age*age
+
+. 
+. *a)
+. reg lnearn age age2 male urb nf-ab
+
+      Source |       SS       df       MS              Number of obs =   46846
+-------------+------------------------------           F( 13, 46832) = 1610.34
+       Model |   3608.8894    13  277.606877           Prob > F      =  0.0000
+    Residual |  8073.35824 46832  .172389781           R-squared     =  0.3089
+-------------+------------------------------           Adj R-squared =  0.3087
+       Total |  11682.2476 46845  .249380887           Root MSE      =   .4152
+
+------------------------------------------------------------------------------
+      lnearn |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         age |   .0856546   .0009289    92.22   0.000      .083834    .0874751
+        age2 |  -.0009141   .0000119   -76.68   0.000    -.0009375   -.0008907
+        male |   .2231808   .0038406    58.11   0.000     .2156531    .2307084
+         urb |   .0353395     .00591     5.98   0.000     .0237558    .0469233
+          nf |  -.2960634   .0129541   -22.85   0.000    -.3214537   -.2706731
+          pe |  -.2562144   .0137823   -18.59   0.000    -.2832278   -.2292009
+          ns |  -.2643054   .0102715   -25.73   0.000    -.2844377   -.2441731
+          nb |  -.2293799    .010482   -21.88   0.000    -.2499247   -.2088351
+          qu |  -.1196823   .0078397   -15.27   0.000    -.1350483   -.1043163
+          on |     -.0264   .0072548    -3.64   0.000    -.0406196   -.0121804
+          mn |  -.1375896   .0097077   -14.17   0.000    -.1566168   -.1185625
+          sk |  -.1503657   .0097581   -15.41   0.000    -.1694916   -.1312398
+          ab |   -.077697   .0093674    -8.29   0.000    -.0960572   -.0593369
+       _cons |   5.431912   .0184002   295.21   0.000     5.395847    5.467977
+------------------------------------------------------------------------------
+
+. 
+. *b)
+. reg lnearn age age2 male urb nf-ab, vce(robust)
+
+Linear regression                                      Number of obs =   46846
+                                                       F( 13, 46832) = 2433.20
+                                                       Prob > F      =  0.0000
+                                                       R-squared     =  0.3089
+                                                       Root MSE      =   .4152
+
+------------------------------------------------------------------------------
+             |               Robust
+      lnearn |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         age |   .0856546   .0008578    99.85   0.000     .0839732    .0873359
+        age2 |  -.0009141   .0000116   -78.56   0.000    -.0009369   -.0008913
+        male |   .2231808   .0038391    58.13   0.000     .2156561    .2307054
+         urb |   .0353395   .0060666     5.83   0.000      .023449    .0472301
+          nf |  -.2960634   .0140891   -21.01   0.000    -.3236783   -.2684486
+          pe |  -.2562144   .0134868   -19.00   0.000    -.2826487     -.22978
+          ns |  -.2643054   .0099442   -26.58   0.000    -.2837961   -.2448146
+          nb |  -.2293799   .0103178   -22.23   0.000     -.249603   -.2091568
+          qu |  -.1196823   .0074868   -15.99   0.000    -.1343566   -.1050081
+          on |     -.0264   .0068774    -3.84   0.000    -.0398797   -.0129203
+          mn |  -.1375896   .0092734   -14.84   0.000    -.1557657   -.1194136
+          sk |  -.1503657   .0093812   -16.03   0.000     -.168753   -.1319784
+          ab |   -.077697   .0092612    -8.39   0.000    -.0958491   -.0595449
+       _cons |   5.431912    .015797   343.86   0.000      5.40095    5.462874
+------------------------------------------------------------------------------
+
+. test age age2
+
+ ( 1)  age = 0
+ ( 2)  age2 = 0
+
+       F(  2, 46832) =11891.65
+            Prob > F =    0.0000
+
+. *The value of the coefficient of age in both models are a  small positive number 
+. *which tells us that there is relationship between age and ln(earnings).
+. *However the positive effect of age on earnings is very marginal, the shape of
+. *relationship is almost a flat line.
+. *F-stat = 11891.65, F-crit(2,infinity) = 4.61 at the 1% level. 
+. *Since 46832 degrees of freedom can be approximate infinity and the large sample
+. *critical value F-critical values from the back of the textbook tells us to
+. *reject the null hypothesis of age = 0 and age2 = 0. 
+. *We use the F-test statistics because we are jointly restricting age and age2 
+. *to be zero, the p value tells us that there is no chance that we fail to
+. *reject the null hypothesis.
+. *Homoskedasticity is when the error terms are uniform and heteroskedasticity is
+. *when the error terms' variance vary. The implications of not using 
+. *heteroskedasticity robust standard erros is not important in this model because
+. *the changes in R^2 is insignificant.
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+end of do-file
+
